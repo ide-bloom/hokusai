@@ -206,9 +206,8 @@ verified template.
 - Lookups through joins.
 - Stored procedure body analysis.
 
-## Contributing, security, license
+## Security, license
 
-Contributions are welcome: [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 Hokusai is licensed under the [Apache License 2.0](LICENSE). Third-party components: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
