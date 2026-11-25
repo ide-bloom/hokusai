@@ -1,0 +1,14 @@
+{
+  "columns": [
+    "customerId",
+    "name",
+    "city"
+  ],
+  "rows": [
+    [
+      "1",
+      "Acme Ltd",
+      "Graz"
+    ]
+  ]
+}

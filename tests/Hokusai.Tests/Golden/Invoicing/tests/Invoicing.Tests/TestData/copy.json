@@ -1,0 +1,5 @@
+{
+  "provider": "Sqlite",
+  "server": null,
+  "template": "Data Source={file};Pooling=False"
+}

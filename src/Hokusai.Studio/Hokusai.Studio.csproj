@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>HokusaiStudio</AssemblyName>
+    <RootNamespace>Hokusai.Studio</RootNamespace>
+    <!-- WPF0001: ThemeMode (the Fluent theme) is marked experimental in WPF; it is the supported way to get Fluent styling. -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hokusai.Engine\Hokusai.Engine.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,18 @@
+{
+  "Urls": "http://127.0.0.1:5080",
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Hokusai": {
+    "Provider": "{{ provider }}",
+    "Auth": {
+      "Mode": "ApiKey",
+      "ApiKeyHashes": []
+    },
+    "AllowNonLocalDatabase": false,
+    "EnableUnverified": false
+  }
+}

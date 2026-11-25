@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    env:
+      DOTNET_NOLOGO: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Check C# formatting
+        run: dotnet format hokusai.slnx --verify-no-changes
+
+      - name: Check C++ formatting
+        shell: pwsh
+        run: clang-format --dry-run --Werror (Get-ChildItem native/agent/src -Include *.cpp,*.h -Recurse).FullName
+
+      - name: Build native agent (x64 and x86)
+        shell: pwsh
+        working-directory: native/agent
+        run: |
+          $env:VCPKG_ROOT = $env:VCPKG_INSTALLATION_ROOT
+          cmake --preset x64
+          cmake --build --preset x64
+          cmake --preset x86
+          cmake --build --preset x86
+
+      - name: Build .NET (including the .NET Framework 4.8 test app)
+        run: dotnet build hokusai.slnx -c Release
+
+      - name: Unit tests
+        run: dotnet test --project tests/Hokusai.Tests -c Release --no-build
+
+      # The SQLite ODBC driver's download host serves a certificate for another domain, so the installer is only
+      # trusted when it matches a checksum the maintainers verified and stored in the SQLITEODBC_SHA256 variable.
+      - name: Install the SQLite ODBC driver
+        if: ${{ vars.SQLITEODBC_SHA256 != '' }}
+        shell: pwsh
+        run: |
+          $file = Join-Path $env:RUNNER_TEMP 'sqliteodbc_w64.exe'
+          Invoke-WebRequest -Uri 'http://www.ch-werner.de/sqliteodbc/sqliteodbc_w64.exe' -OutFile $file
+          $hash = (Get-FileHash $file -Algorithm SHA256).Hash
+          if ($hash -ne '${{ vars.SQLITEODBC_SHA256 }}') { throw "Checksum mismatch: $hash" }
+          Start-Process $file -ArgumentList '/S' -Wait
+
+      - name: End-to-end tests (LocalDB, ODBC agent, generated projects)
+        run: dotnet test --project tests/Hokusai.EndToEnd.Tests -c Release --no-build -- --explicit on
+
+      - name: Check for vulnerable packages
+        shell: pwsh
+        run: |
+          $report = dotnet list hokusai.slnx package --vulnerable --include-transitive 2>&1 | Out-String
+          Write-Output $report
+          if ($report -match 'has the following vulnerable packages') { throw 'Vulnerable packages found.' }
+
+  codeql:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [csharp, c-cpp]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+
+      - uses: github/codeql-action/init@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: manual
+
+      - name: Build for analysis (C#)
+        if: matrix.language == 'csharp'
+        run: dotnet build hokusai.slnx -c Release
+
+      - name: Build for analysis (C++)
+        if: matrix.language == 'c-cpp'
+        shell: pwsh
+        working-directory: native/agent
+        run: |
+          $env:VCPKG_ROOT = $env:VCPKG_INSTALLATION_ROOT
+          cmake --preset x64
+          cmake --build --preset x64
+
+      - uses: github/codeql-action/analyze@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          category: /language:${{ matrix.language }}

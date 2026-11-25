@@ -1,0 +1,82 @@
+{
+  "tables": [
+    {
+      "table": "Invoice",
+      "keyColumns": [
+        "InvoiceId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Insert",
+          "key": {
+            "InvoiceId": "12"
+          },
+          "after": {
+            "InvoiceId": "12",
+            "CustomerId": "2",
+            "Status": "Draft",
+            "Taxable": "1",
+            "Total": "0"
+          }
+        }
+      ]
+    },
+    {
+      "table": "InvoiceLine",
+      "keyColumns": [
+        "LineId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Insert",
+          "key": {
+            "LineId": "1"
+          },
+          "after": {
+            "LineId": "1",
+            "InvoiceId": "12",
+            "Description": "Widget",
+            "Qty": "2",
+            "Price": "9.5"
+          }
+        },
+        {
+          "kind": "Insert",
+          "key": {
+            "LineId": "2"
+          },
+          "after": {
+            "LineId": "2",
+            "InvoiceId": "12",
+            "Description": "Gadget",
+            "Qty": "1",
+            "Price": "120"
+          }
+        }
+      ]
+    },
+    {
+      "table": "InvoiceTax",
+      "keyColumns": [
+        "InvoiceId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Insert",
+          "key": {
+            "InvoiceId": "12"
+          },
+          "after": {
+            "InvoiceId": "12",
+            "Rate": "20"
+          }
+        }
+      ]
+    }
+  ],
+  "isEmpty": false,
+  "changeCount": 4
+}

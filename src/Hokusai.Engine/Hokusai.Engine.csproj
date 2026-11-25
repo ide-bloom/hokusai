@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Orchestration shared by the CLI and the Studio: recording sessions, inference, verification, generation, checks. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hokusai.Capture\Hokusai.Capture.csproj" />
+    <ProjectReference Include="..\Hokusai.Infer\Hokusai.Infer.csproj" />
+    <ProjectReference Include="..\Hokusai.Verify\Hokusai.Verify.csproj" />
+    <ProjectReference Include="..\Hokusai.Generate\Hokusai.Generate.csproj" />
+  </ItemGroup>
+</Project>

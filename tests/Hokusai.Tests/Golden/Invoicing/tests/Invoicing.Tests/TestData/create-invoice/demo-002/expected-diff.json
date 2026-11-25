@@ -1,0 +1,50 @@
+{
+  "tables": [
+    {
+      "table": "Invoice",
+      "keyColumns": [
+        "InvoiceId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Insert",
+          "key": {
+            "InvoiceId": "12"
+          },
+          "after": {
+            "InvoiceId": "12",
+            "CustomerId": "1",
+            "Status": "Draft",
+            "Taxable": "0",
+            "Total": "0"
+          }
+        }
+      ]
+    },
+    {
+      "table": "InvoiceLine",
+      "keyColumns": [
+        "LineId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Insert",
+          "key": {
+            "LineId": "1"
+          },
+          "after": {
+            "LineId": "1",
+            "InvoiceId": "12",
+            "Description": "Service",
+            "Qty": "3",
+            "Price": "45"
+          }
+        }
+      ]
+    }
+  ],
+  "isEmpty": false,
+  "changeCount": 2
+}

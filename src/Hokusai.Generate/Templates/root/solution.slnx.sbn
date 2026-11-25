@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/{{ name }}.Actions/{{ name }}.Actions.csproj" />
+{{~ if api ~}}
+    <Project Path="src/{{ name }}.Api/{{ name }}.Api.csproj" />
+{{~ end ~}}
+{{~ if mcp ~}}
+    <Project Path="src/{{ name }}.Mcp/{{ name }}.Mcp.csproj" />
+{{~ end ~}}
+  </Folder>
+{{~ if tests ~}}
+  <Folder Name="/tests/">
+    <Project Path="tests/{{ name }}.Tests/{{ name }}.Tests.csproj" />
+  </Folder>
+{{~ end ~}}
+</Solution>

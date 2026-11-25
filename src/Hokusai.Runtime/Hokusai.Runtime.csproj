@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The runtime is the data layer shared by verification and by every generated project.
+    Generated projects receive these exact source files (see Hokusai.Generate), so replay during
+    verification and execution in a generated API cannot drift apart.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Hokusai.Runtime</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="System.Data.Odbc" />
+    <PackageReference Include="System.Data.OleDb" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+  </ItemGroup>
+</Project>

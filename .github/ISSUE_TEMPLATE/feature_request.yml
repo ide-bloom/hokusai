@@ -1,0 +1,15 @@
+name: Feature request
+description: A capture source, inference rule or generator feature Hokusai should support.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can you not do today? Include the legacy app's technology if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- LibraryImport source generation (Win32 hooks, process bitness) emits unsafe code. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hokusai.Core\Hokusai.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FlaUI.UIA3" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Hokusai.Capture.Tests" />
+  </ItemGroup>
+</Project>

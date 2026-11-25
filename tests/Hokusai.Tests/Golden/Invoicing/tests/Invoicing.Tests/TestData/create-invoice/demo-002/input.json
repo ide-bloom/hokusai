@@ -1,0 +1,11 @@
+{
+  "taxable": false,
+  "customer": "Acme Ltd",
+  "lines": [
+    {
+      "description": "Service",
+      "qty": 3,
+      "price": 45
+    }
+  ]
+}

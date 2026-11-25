@@ -1,0 +1,31 @@
+name: Bug report
+description: Something Hokusai captured, inferred, verified or generated incorrectly.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, what you expected and what you got. Paste `hokusai verify` mismatches if relevant.
+    validations:
+      required: true
+  - type: dropdown
+    id: source
+    attributes:
+      label: Data source
+      options: [SQL Server (Extended Events), ODBC (agent), SQLite (state diff), Access (state diff), Not applicable]
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Application technology
+      description: For example VB6 with ADO, Delphi with ODBC, WinForms on .NET Framework.
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `hokusai doctor`
+      render: text
+  - type: markdown
+    attributes:
+      value: Do not attach recordings or databases that contain customer data. Recordings hold every value typed during a demonstration.

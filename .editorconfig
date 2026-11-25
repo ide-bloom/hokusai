@@ -1,0 +1,72 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{json,yml,yaml,props,targets,csproj,slnx,xml,xaml,cmake,md}]
+indent_size = 2
+
+[CMakeLists.txt]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = outside_namespace:warning
+dotnet_sort_system_directives_first = true
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:suggestion
+csharp_prefer_braces = when_multiline:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_new_line_before_open_brace = all
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_readonly_field = true:warning
+# Constants and static readonly fields are PascalCase; other private fields are _camelCase.
+dotnet_naming_rule.constants_pascal.symbols = constant_fields
+dotnet_naming_rule.constants_pascal.style = pascal
+dotnet_naming_rule.constants_pascal.severity = warning
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
+dotnet_naming_symbols.constant_fields.required_modifiers = const
+dotnet_naming_rule.static_readonly_pascal.symbols = static_readonly_fields
+dotnet_naming_rule.static_readonly_pascal.style = pascal
+dotnet_naming_rule.static_readonly_pascal.severity = warning
+dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.static_readonly_fields.required_modifiers = static, readonly
+dotnet_naming_style.pascal.capitalization = pascal_case
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_rule.private_fields_underscore.severity = warning
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+dotnet_naming_style.underscore_camel.required_prefix = _
+
+# IDE0005 needs GenerateDocumentationFile to report reliably; keep it a suggestion.
+dotnet_diagnostic.IDE0005.severity = suggestion
+# Static-ness is a design choice for many helpers here, not a defect.
+dotnet_diagnostic.CA1822.severity = suggestion
+# Hokusai is a desktop tool without localized resources; culture is passed explicitly where values are parsed or formatted.
+dotnet_diagnostic.CA1303.severity = none
+# LoggerMessage delegates add ceremony without benefit for a CLI-scale tool.
+dotnet_diagnostic.CA1848.severity = none
+# Collections in the JSON model are settable so System.Text.Json can populate them.
+dotnet_diagnostic.CA2227.severity = none
+dotnet_diagnostic.CA1002.severity = none
+# Model types intentionally use List<T> for serialization.
+dotnet_diagnostic.CA1819.severity = none
+
+[tests/**.cs]
+# Test names use underscores for readability.
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA2007.severity = none
+
+[**/Generated/**.cs]
+generated_code = true

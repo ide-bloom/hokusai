@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- End-to-end tests on Windows: drive the test apps with FlaUI, run infer/verify/generate, build and run the
+       generated projects, and compare the generated API and MCP server with the app for new inputs. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="FlaUI.UIA3" />
+    <PackageReference Include="ModelContextProtocol" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Hokusai.Engine\Hokusai.Engine.csproj" />
+    <!-- Built first so the executables exist; not referenced as assemblies. -->
+    <ProjectReference Include="..\..\testapps\LegacyInvoices\LegacyInvoices.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+    <ProjectReference Include="..\..\testapps\ModernInvoices\ModernInvoices.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+    <ProjectReference Include="..\..\testapps\AccessInvoices\AccessInvoices.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+</Project>

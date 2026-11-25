@@ -1,0 +1,28 @@
+{
+  "tables": [
+    {
+      "table": "Invoice",
+      "keyColumns": [
+        "InvoiceId"
+      ],
+      "keyedByHash": false,
+      "changes": [
+        {
+          "kind": "Delete",
+          "key": {
+            "InvoiceId": "10"
+          },
+          "before": {
+            "InvoiceId": "10",
+            "CustomerId": "1",
+            "Status": "Draft",
+            "Taxable": "1",
+            "Total": "120"
+          }
+        }
+      ]
+    }
+  ],
+  "isEmpty": false,
+  "changeCount": 1
+}

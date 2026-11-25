@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>hokusai</AssemblyName>
+    <RootNamespace>Hokusai.Cli</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hokusai.Engine\Hokusai.Engine.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Ship the native agent next to hokusai.exe when it has been built (CI builds it before publishing). -->
+    <None Include="..\..\native\agent\build\x64\Release\hokusai_agent64.dll;..\..\native\agent\build\x64\Release\hokusai_launcher64.exe;..\..\native\agent\build\x86\Release\hokusai_agent32.dll;..\..\native\agent\build\x86\Release\hokusai_launcher32.exe"
+          Condition="Exists('..\..\native\agent\build\x64\Release\hokusai_agent64.dll')"
+          Link="agents\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

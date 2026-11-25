@@ -1,0 +1,331 @@
+<Window x:Class="Hokusai.Studio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Hokusai.Studio"
+        Title="Hokusai Studio" Width="1280" Height="820" MinWidth="960" MinHeight="600">
+  <Window.DataContext>
+    <local:MainViewModel />
+  </Window.DataContext>
+  <DockPanel Margin="12">
+    <!-- Workspace and action selection -->
+    <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="260" />
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="Workspace" VerticalAlignment="Center" Margin="0,0,8,0" />
+      <TextBox Grid.Column="1" Text="{Binding WorkspacePath, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Grid.Column="2" Content="Open" Command="{Binding OpenWorkspace}" Margin="8,0" />
+      <TextBlock Grid.Column="3" Text="Action" VerticalAlignment="Center" Margin="16,0,8,0" />
+      <ComboBox Grid.Column="4" ItemsSource="{Binding Actions}" SelectedItem="{Binding SelectedAction}" />
+    </Grid>
+    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Status}" Margin="0,12,0,0" TextWrapping="Wrap" />
+
+    <TabControl TabStripPlacement="Left">
+      <!-- Data source setup -->
+      <TabItem Header="Data source">
+        <ScrollViewer Margin="16,0,0,0">
+          <StackPanel MaxWidth="900" HorizontalAlignment="Left">
+            <TextBlock Style="{StaticResource Heading}" Text="Data source" />
+            <TextBlock Style="{StaticResource Hint}" Text="SQL Server is captured with an Extended Events session filtered to the app's process; ODBC with the in-process agent; SQLite and Access files with row-level state diffs. The connection string is encrypted with DPAPI for your Windows account." />
+            <TextBlock Text="Provider" />
+            <ComboBox ItemsSource="{Binding Providers}" SelectedItem="{Binding Provider}" Width="240" HorizontalAlignment="Left" Margin="0,4,0,12" />
+            <TextBlock Text="Connection string (SQL Server, ODBC)" />
+            <TextBox Text="{Binding ConnectionString, UpdateSourceTrigger=PropertyChanged}" Margin="0,4,0,12" />
+            <TextBlock Text="Database file (SQLite, Access, or the file behind an ODBC source)" />
+            <TextBox Text="{Binding DatabaseFile, UpdateSourceTrigger=PropertyChanged}" Margin="0,4,0,12" />
+            <StackPanel Orientation="Horizontal">
+              <Button Content="Connect" Command="{Binding Connect}" />
+              <Button Content="Run doctor" Command="{Binding RunDoctor}" Margin="8,0,0,0" />
+            </StackPanel>
+            <TextBlock Text="Tables" FontWeight="SemiBold" Margin="0,16,0,4" />
+            <ItemsControl ItemsSource="{Binding Tables}" />
+            <TextBlock Text="Environment" FontWeight="SemiBold" Margin="0,16,0,4" />
+            <ItemsControl ItemsSource="{Binding Checks}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock TextWrapping="Wrap" Margin="0,2">
+                    <Run Text="{Binding Status, Mode=OneWay}" FontWeight="SemiBold" />
+                    <Run Text="{Binding Name, Mode=OneWay}" />
+                    <Run Text="—" />
+                    <Run Text="{Binding Detail, Mode=OneWay}" />
+                  </TextBlock>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Recording with live timelines -->
+      <TabItem Header="Recording">
+        <Grid Margin="16,0,0,0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <TextBlock Style="{StaticResource Heading}" Text="Recording" />
+          <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition />
+              <RowDefinition />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Action name" VerticalAlignment="Center" Margin="0,4,8,4" />
+            <TextBox Grid.Column="1" Text="{Binding RecordAction, UpdateSourceTrigger=PropertyChanged}" Margin="0,4" />
+            <TextBlock Grid.Column="2" Text="Attach to PID" VerticalAlignment="Center" Margin="16,4,8,4" />
+            <TextBox Grid.Column="3" Text="{Binding AttachPid, UpdateSourceTrigger=PropertyChanged}" Margin="0,4" />
+            <TextBlock Grid.Row="1" Text="Program" VerticalAlignment="Center" Margin="0,4,8,4" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Executable, UpdateSourceTrigger=PropertyChanged}" Margin="0,4" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="Arguments" VerticalAlignment="Center" Margin="16,4,8,4" />
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding Arguments, UpdateSourceTrigger=PropertyChanged}" Margin="0,4" />
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="0,8,0,0">
+              <CheckBox Content="Load the ODBC agent" IsChecked="{Binding UseAgent}" VerticalAlignment="Center" Margin="0,0,16,0" />
+              <Button Content="Start recording" Command="{Binding StartRecording}" />
+              <Button Content="Start demonstration" Command="{Binding BeginDemonstration}" Margin="8,0,0,0" />
+              <Button Content="End demonstration" Command="{Binding EndDemonstration}" Margin="8,0,0,0" />
+              <Button Content="Stop" Command="{Binding StopRecording}" Margin="8,0,0,0" />
+            </StackPanel>
+          </Grid>
+          <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition />
+              <ColumnDefinition Width="12" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Top" Text="UI timeline" FontWeight="SemiBold" Margin="0,0,0,4" />
+              <DataGrid ItemsSource="{Binding UiTimeline}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
+                  <DataGridTextColumn Header="Event" Binding="{Binding Kind}" />
+                  <DataGridTextColumn Header="Control" Binding="{Binding Subject}" />
+                  <DataGridTextColumn Header="Value" Binding="{Binding Detail}" Width="*" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </DockPanel>
+            <DockPanel Grid.Column="2">
+              <TextBlock DockPanel.Dock="Top" Text="Data timeline" FontWeight="SemiBold" Margin="0,0,0,4" />
+              <DataGrid ItemsSource="{Binding DataTimeline}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
+                  <DataGridTextColumn Header="Source" Binding="{Binding Kind}" />
+                  <DataGridTextColumn Header="Rows" Binding="{Binding Subject}" />
+                  <DataGridTextColumn Header="Statement" Binding="{Binding Detail}" Width="*" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </DockPanel>
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <!-- Demonstrations per action -->
+      <TabItem Header="Demonstrations">
+        <DockPanel Margin="16,0,0,0">
+          <TextBlock DockPanel.Dock="Top" Style="{StaticResource Heading}" Text="Demonstrations" />
+          <TextBlock DockPanel.Dock="Top" Style="{StaticResource Hint}" Text="Record each action at least twice with different values so inputs can be told apart from constants." />
+          <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,12,0,0">
+            <Button Content="Infer template" Command="{Binding Infer}" />
+          </StackPanel>
+          <DataGrid ItemsSource="{Binding Demonstrations}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="#" Binding="{Binding Index}" />
+              <DataGridTextColumn Header="Recorded" Binding="{Binding When}" />
+              <DataGridTextColumn Header="UI events" Binding="{Binding UiEvents}" />
+              <DataGridTextColumn Header="Statements" Binding="{Binding Statements}" />
+              <DataGridTextColumn Header="Row changes" Binding="{Binding RowChanges}" />
+              <DataGridTextColumn Header="File effects" Binding="{Binding FileEffects}" />
+              <DataGridTextColumn Header="Provider" Binding="{Binding Provider}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+
+      <!-- Inferred template, color-coded by value class, with evidence -->
+      <TabItem Header="Template">
+        <Grid Margin="16,0,0,0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <TextBlock Style="{StaticResource Heading}" Text="Inferred template" />
+          <StackPanel Grid.Row="1" Margin="0,0,0,8">
+            <TextBlock Text="{Binding TemplateSummary}" />
+            <WrapPanel Margin="0,6,0,0">
+              <Border Background="{StaticResource InputBrush}" CornerRadius="3" Padding="6,1" Margin="0,0,6,0"><TextBlock Text="input" Foreground="White" /></Border>
+              <Border Background="{StaticResource DependentBrush}" CornerRadius="3" Padding="6,1" Margin="0,0,6,0"><TextBlock Text="dependent" Foreground="White" /></Border>
+              <Border Background="{StaticResource GeneratedBrush}" CornerRadius="3" Padding="6,1" Margin="0,0,6,0"><TextBlock Text="generated" Foreground="White" /></Border>
+              <Border Background="{StaticResource ConstantBrush}" CornerRadius="3" Padding="6,1"><TextBlock Text="constant" Foreground="White" /></Border>
+            </WrapPanel>
+            <ItemsControl ItemsSource="{Binding Issues}" Margin="0,6,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock Text="{Binding}" Foreground="{StaticResource MismatchBrush}" TextWrapping="Wrap" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+          <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Statements}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border BorderThickness="0,0,0,1" BorderBrush="#40808080" Padding="0,8">
+                    <StackPanel>
+                      <TextBlock>
+                        <Run Text="Step" FontWeight="SemiBold" />
+                        <Run Text="{Binding Step, Mode=OneWay}" FontWeight="SemiBold" />
+                        <Run Text="{Binding Context, Mode=OneWay}" />
+                      </TextBlock>
+                      <TextBlock Style="{StaticResource Mono}" Text="{Binding Sql}" Margin="0,4" />
+                      <ItemsControl ItemsSource="{Binding Bindings}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                              <TextBlock Style="{StaticResource Mono}" Text="{Binding Placeholder}" Width="60" />
+                              <Border Background="{Binding Brush}" CornerRadius="3" Padding="6,1" Margin="0,0,8,0">
+                                <TextBlock Text="{Binding Class}" Foreground="White" />
+                              </Border>
+                              <TextBlock Text="{Binding Detail}" />
+                              <TextBlock Text="{Binding Confidence, StringFormat=' · confidence {0}'}" Opacity="0.7" />
+                            </StackPanel>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+          <TextBlock Grid.Row="3" Text="Evidence" FontWeight="SemiBold" Margin="0,12,0,4" />
+          <DataGrid Grid.Row="4" ItemsSource="{Binding Evidence}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Subject" Binding="{Binding Subject}" />
+              <DataGridTextColumn Header="Rule" Binding="{Binding Rule}" />
+              <DataGridTextColumn Header="Confidence" Binding="{Binding Confidence}" />
+              <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+      </TabItem>
+
+      <!-- Conditions and loops -->
+      <TabItem Header="Conditions &amp; loops">
+        <DockPanel Margin="16,0,0,0">
+          <TextBlock DockPanel.Dock="Top" Style="{StaticResource Heading}" Text="Conditions and loops" />
+          <TextBlock DockPanel.Dock="Top" Style="{StaticResource Hint}" Text="Statements present in only some demonstrations become conditional on the simplest separating input; blocks repeated a varying number of times become loops over a grid's rows." />
+          <DataGrid ItemsSource="{Binding Structure}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" />
+              <DataGridTextColumn Header="Rule" Binding="{Binding Description}" Width="*" />
+              <DataGridTextColumn Header="Steps" Binding="{Binding Steps}" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </DockPanel>
+      </TabItem>
+
+      <!-- Verification results with row-level diffs -->
+      <TabItem Header="Verification">
+        <Grid Margin="16,0,0,0">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <TextBlock Style="{StaticResource Heading}" Text="Verification" />
+          <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="Verify on fresh copies" Command="{Binding Verify}" />
+          </StackPanel>
+          <TextBlock Grid.Row="2" Text="{Binding VerificationSummary}" TextWrapping="Wrap" Margin="0,0,0,8" />
+          <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="260" />
+              <ColumnDefinition Width="12" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ListBox ItemsSource="{Binding Results}" SelectedItem="{Binding SelectedResult}">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <TextBlock TextWrapping="Wrap">
+                    <Run Text="Demonstration" />
+                    <Run Text="{Binding Index, Mode=OneWay}" />
+                    <Run Text=":" />
+                    <Run Text="{Binding Result, Mode=OneWay}" />
+                  </TextBlock>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <DockPanel Grid.Column="2">
+              <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedResult.Files}" />
+              <DataGrid ItemsSource="{Binding SelectedResult.Mismatches}" IsReadOnly="True" AutoGenerateColumns="False" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Table" Binding="{Binding Table}" />
+                  <DataGridTextColumn Header="Change" Binding="{Binding Kind}" />
+                  <DataGridTextColumn Header="Row" Binding="{Binding Key}" />
+                  <DataGridTextColumn Header="Column" Binding="{Binding Column}" />
+                  <DataGridTextColumn Header="App wrote" Binding="{Binding Expected}" />
+                  <DataGridTextColumn Header="Template wrote" Binding="{Binding Actual}" Width="*" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </DockPanel>
+          </Grid>
+        </Grid>
+      </TabItem>
+
+      <!-- Generation -->
+      <TabItem Header="Generation">
+        <Grid Margin="16,0,0,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="420" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock Style="{StaticResource Heading}" Text="Generation" />
+            <TextBlock Style="{StaticResource Hint}" Text="Verified actions are generated enabled; unverified ones are generated disabled, with the reason, until you fix and verify them." />
+            <ItemsControl ItemsSource="{Binding GenerateChoices}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <CheckBox IsChecked="{Binding Selected}" Margin="0,2">
+                    <TextBlock>
+                      <Run Text="{Binding Action, Mode=OneWay}" />
+                      <Run Text="{Binding Status, StringFormat=' ({0})', Mode=OneWay}" />
+                    </TextBlock>
+                  </CheckBox>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="Output folder" Margin="0,12,0,4" />
+            <TextBox Text="{Binding OutputFolder, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Name" Margin="0,12,0,4" />
+            <TextBox Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+              <CheckBox Content="REST API" IsChecked="{Binding Api}" Margin="0,0,16,0" />
+              <CheckBox Content="MCP server" IsChecked="{Binding Mcp}" Margin="0,0,16,0" />
+              <CheckBox Content="Regression tests" IsChecked="{Binding Tests}" />
+            </StackPanel>
+            <Button Content="Generate" Command="{Binding Generate}" HorizontalAlignment="Left" Margin="0,12,0,0" />
+          </StackPanel>
+          <DockPanel Grid.Column="2">
+            <TextBlock DockPanel.Dock="Top" Text="Files" FontWeight="SemiBold" Margin="0,0,0,4" />
+            <ListBox ItemsSource="{Binding GeneratedFiles}" />
+          </DockPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "hokusai-agent",
+  "version": "0.1.0",
+  "dependencies": [
+    "detours"
+  ],
+  "builtin-baseline": "15f012269634c31d5f4b204f8ecd51681f130fa5"
+}

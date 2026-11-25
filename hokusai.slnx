@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Hokusai.Capture/Hokusai.Capture.csproj" />
+    <Project Path="src/Hokusai.Cli/Hokusai.Cli.csproj" />
+    <Project Path="src/Hokusai.Core/Hokusai.Core.csproj" />
+    <Project Path="src/Hokusai.Engine/Hokusai.Engine.csproj" />
+    <Project Path="src/Hokusai.Generate/Hokusai.Generate.csproj" />
+    <Project Path="src/Hokusai.Infer/Hokusai.Infer.csproj" />
+    <Project Path="src/Hokusai.Runtime/Hokusai.Runtime.csproj" />
+    <Project Path="src/Hokusai.Sql/Hokusai.Sql.csproj" />
+    <Project Path="src/Hokusai.Studio/Hokusai.Studio.csproj" />
+    <Project Path="src/Hokusai.Verify/Hokusai.Verify.csproj" />
+  </Folder>
+  <Folder Name="/testapps/">
+    <Project Path="testapps/AccessInvoices/AccessInvoices.csproj" />
+    <Project Path="testapps/LegacyInvoices/LegacyInvoices.csproj" />
+    <Project Path="testapps/ModernInvoices/ModernInvoices.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Hokusai.EndToEnd.Tests/Hokusai.EndToEnd.Tests.csproj" />
+    <Project Path="tests/Hokusai.Tests/Hokusai.Tests.csproj" />
+  </Folder>
+</Solution>

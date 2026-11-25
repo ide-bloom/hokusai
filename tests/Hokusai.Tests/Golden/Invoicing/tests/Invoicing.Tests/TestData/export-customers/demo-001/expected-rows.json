@@ -1,0 +1,24 @@
+{
+  "columns": [
+    "customerId",
+    "name",
+    "creditLimit"
+  ],
+  "rows": [
+    [
+      "1",
+      "Acme Ltd",
+      "1000"
+    ],
+    [
+      "2",
+      "Globex",
+      "500"
+    ],
+    [
+      "3",
+      "Initech",
+      "250"
+    ]
+  ]
+}

@@ -1,0 +1,26 @@
+# Build output
+bin/
+obj/
+publish/
+artifacts/
+build/
+out/
+vcpkg_installed/
+*.user
+.vs/
+.vscode/
+TestResults/
+
+# Hokusai workspaces: recordings and databases never get committed
+recordings/
+.hokusai/
+*.mdf
+*.ldf
+*.db
+*.bak
+*.accdb
+*.laccdb
+*.xel
+
+# Local build prompt (not part of the project)
+hokusai-prompt.md

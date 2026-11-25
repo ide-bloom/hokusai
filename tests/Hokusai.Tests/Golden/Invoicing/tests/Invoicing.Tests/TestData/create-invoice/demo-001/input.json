@@ -1,0 +1,16 @@
+{
+  "taxable": true,
+  "customer": "Globex",
+  "lines": [
+    {
+      "description": "Widget",
+      "qty": 2,
+      "price": 9.5
+    },
+    {
+      "description": "Gadget",
+      "qty": 1,
+      "price": 120
+    }
+  ]
+}
